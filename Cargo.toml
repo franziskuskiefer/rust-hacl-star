@@ -1,0 +1,11 @@
+[package]
+name = "hacl-star"
+version = "0.0.0"
+authors = ["quininer <quininer@live.com>"]
+
+[dependencies]
+libc = { version = "*", default-features = false }
+
+[build-dependencies]
+bindgen = "*"
+cmake = "*"
