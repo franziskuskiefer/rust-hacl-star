@@ -7,7 +7,7 @@ macro_rules! ffi {
     ( $( $name:ident ),* ) => {
         $(
             pub mod $name {
-                include!(concat!(env!("OUT_DIR"), concat!("/", stringify!($name), ".rs")));
+                include!(concat!(env!("OUT_DIR"), "/", stringify!($name), ".rs"));
             }
         )*
     }
