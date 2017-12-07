@@ -1,5 +1,3 @@
-#![no_std]
+extern crate hacl_sys;
 
-extern crate libc;
-
-pub mod ffi;
+// TODO
