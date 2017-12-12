@@ -2,9 +2,14 @@
 name = "hacl"
 version = "0.0.0"
 authors = ["quininer <quininer@live.com>"]
+description = "HACL*, a formally verified cryptographic library for Rust. (binding to hacl-c)"
+keywords = [ "hacl-star", "cryptographic" ]
+categories = [ "cryptography" ]
+repository = "https://github.com/quininer/rust-hacl"
+license = "MIT"
 
 [workspace]
 
 [dependencies]
-libc = { version = "*", default-features = false }
+libc = { version = "0.2", default-features = false }
 hacl-sys = { path = "hacl-sys" }
