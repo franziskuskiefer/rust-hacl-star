@@ -9,6 +9,7 @@ fn main() {
     let outdir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     let dst = cmake::Config::new("hacl-c")
+        .cflag("-std=gnu99")
         .build_target("all")
         .build();
 
