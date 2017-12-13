@@ -2,7 +2,7 @@
 name = "hacl-sys"
 version = "0.0.0"
 authors = ["quininer <quininer@live.com>"]
-description = "HACL*, a formally verified cryptographic library for Rust. (binding to hacl-c)"
+description = "HACL* FFI"
 keywords = [ "hacl-star", "cryptographic" ]
 categories = [ "no-std", "cryptography", "api-bindings" ]
 repository = "https://github.com/quininer/rust-hacl"
