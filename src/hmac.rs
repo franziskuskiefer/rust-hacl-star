@@ -1,4 +1,4 @@
-use hacl_sys as ffi;
+use hacl_star_sys as ffi;
 
 
 pub const KEY_LENGTH: usize = 64;

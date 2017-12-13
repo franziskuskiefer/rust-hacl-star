@@ -1,6 +1,6 @@
-extern crate hacl;
+extern crate hacl_star;
 
-use hacl::hmac;
+use hacl_star::hmac;
 
 
 const KEY: &[u8] = b"key";

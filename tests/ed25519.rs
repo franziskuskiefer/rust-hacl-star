@@ -1,6 +1,6 @@
-extern crate hacl;
+extern crate hacl_star;
 
-use hacl::ed25519;
+use hacl_star::ed25519;
 
 
 const SK11: [u8; 32] = [

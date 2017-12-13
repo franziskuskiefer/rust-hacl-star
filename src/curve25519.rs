@@ -1,4 +1,4 @@
-use hacl_sys as ffi;
+use hacl_star_sys as ffi;
 
 
 pub fn scalarmult(mypublic: &mut [u8; 32], secret: &[u8; 32], basepoint: &[u8; 32]) {

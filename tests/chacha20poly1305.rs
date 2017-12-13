@@ -1,6 +1,6 @@
-extern crate hacl;
+extern crate hacl_star;
 
-use hacl::chacha20poly1305;
+use hacl_star::chacha20poly1305;
 
 
 const PLAINTEXT: [u8; 114] = [

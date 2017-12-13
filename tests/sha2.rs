@@ -1,6 +1,6 @@
-extern crate hacl;
+extern crate hacl_star;
 
-use hacl::sha2;
+use hacl_star::sha2;
 
 
 const INPUT: &[u8] = b"abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu";

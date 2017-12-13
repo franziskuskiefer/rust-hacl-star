@@ -1,4 +1,4 @@
-extern crate cmake;
+extern crate cc;
 extern crate bindgen;
 
 use std::env;
@@ -8,10 +8,32 @@ use std::path::PathBuf;
 fn main() {
     let outdir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
-    let dst = cmake::Config::new("hacl-c")
-        .cflag("-std=gnu99")
-        .build_target("all")
-        .build();
+    cc::Build::new()
+        .flag_if_supported("-std=gnu99")
+        .flag("-Ofast")
+        .flag("-fwrapv")
+        .flag("-fomit-frame-pointer")
+        .flag("-funroll-loops")
+        .flag("-fPIC")
+        .flag("-Wno-unused-parameter")
+        .flag("-Wno-unused-variable")
+        .files(&[
+            "hacl-c/Hacl_Salsa20.c",
+            "hacl-c/Hacl_Poly1305_64.c",
+            "hacl-c/Hacl_Chacha20.c",
+            "hacl-c/AEAD_Poly1305_64.c",
+            "hacl-c/Hacl_Chacha20Poly1305.c",
+            "hacl-c/Hacl_HMAC_SHA2_256.c",
+            "hacl-c/Hacl_SHA2_256.c",
+            "hacl-c/Hacl_SHA2_384.c",
+            "hacl-c/Hacl_SHA2_512.c",
+            "hacl-c/Hacl_Ed25519.c",
+            "hacl-c/Hacl_Curve25519.c",
+            "hacl-c/kremlib.c",
+            "hacl-c/Hacl_Policies.c",
+            "hacl-c/NaCl.c"
+        ])
+        .compile("hacl");
 
     macro_rules! bindgen {
         ( @bind $input:expr => $output:expr , $white:expr ) => {
@@ -48,6 +70,5 @@ fn main() {
         "hacl-c/NaCl.h"                  => "nacl.rs",               "NaCl_.+"
     };
 
-    println!("cargo:rustc-link-search=native={}/build", dst.display());
     println!("cargo:rustc-link-lib=static=hacl");
 }

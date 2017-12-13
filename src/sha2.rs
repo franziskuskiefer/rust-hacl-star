@@ -1,4 +1,4 @@
-use hacl_sys as ffi;
+use hacl_star_sys as ffi;
 
 
 macro_rules! sha2 {

@@ -1,4 +1,6 @@
-extern crate hacl_sys;
+#![no_std]
+
+extern crate hacl_star_sys;
 
 pub mod sha2;
 pub mod hmac;
