@@ -1,6 +1,6 @@
 [package]
 name = "hacl-star"
-version = "0.0.0"
+version = "0.0.2"
 authors = ["quininer <quininer@live.com>"]
 description = "HACL*, a formally verified cryptographic library for Rust (binding to hacl-c)."
 keywords = [ "hacl-star", "cryptographic" ]

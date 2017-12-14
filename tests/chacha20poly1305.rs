@@ -43,10 +43,13 @@ fn test_aead() {
     let mut output = [0; 114];
     let mut tag = [0; 16];
 
-    chacha20poly1305::aead_encrypt(&mut output, &mut tag, &PLAINTEXT, &AAD, &KEY, &NONCE);
+    output.clone_from(&PLAINTEXT);
+    chacha20poly1305::Key(&KEY).nonce(&NONCE)
+        .aead_encrypt(&AAD, &mut output, &mut tag);
     assert_eq!(&output[..], &XCIPHERTEXT[..]);
     assert_eq!(tag, XMAC);
 
-    assert!(chacha20poly1305::aead_decrypt(&mut output, &XCIPHERTEXT, &tag, &AAD, &KEY, &NONCE));
+    chacha20poly1305::Key(&KEY).nonce(&NONCE)
+        .aead_decrypt(&AAD, &tag, &mut output);
     assert_eq!(&output[..], &PLAINTEXT[..]);
 }

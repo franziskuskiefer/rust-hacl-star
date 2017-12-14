@@ -15,7 +15,8 @@ fn test_salsa() {
     key[0] = 0x80;
     let nonce = [0; 32];
 
-    salsa20::salsa20(&mut buf, &key, &nonce);
+    salsa20::Key(&key).nonce(&nonce)
+        .salsa20(&mut buf);
 
     assert_eq!(&EXPECTED1[..], &buf[..64]);
     assert_eq!(&EXPECTED2[..], &buf[192..][..64]);

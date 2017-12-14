@@ -10,11 +10,15 @@ fn main() {
 
     cc::Build::new()
         .flag_if_supported("-std=gnu99")
+
+        // from https://github.com/mitls/hacl-star/blob/master/snapshots/hacl-c/Makefile#L8
         .flag("-Ofast")
         .flag("-fwrapv")
         .flag("-fomit-frame-pointer")
         .flag("-funroll-loops")
         .flag("-fPIC")
+
+        // ignore some warnings
         .flag("-Wno-unused-parameter")
         .flag("-Wno-unused-variable")
         .files(&[

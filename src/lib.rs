@@ -12,3 +12,5 @@ pub mod curve25519;
 
 // TODO
 // #[path = "box.rs"] pub mod box_;
+
+pub struct And<A, B>(pub A, pub B);

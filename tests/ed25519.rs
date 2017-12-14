@@ -36,14 +36,14 @@ const SIG11: [u8; 64] = [
 
 #[test]
 fn test_ed25519() {
-    let mut sig = [0; 64];
-    let mut pk = [0; 32];
+    let mut sig = ed25519::Signature([0; 64]);
+    let mut pk = ed25519::PublicKey([0; 32]);
 
-    ed25519::secret_to_public(&mut pk, &SK11);
-    assert_eq!(&pk, &PK11);
+    ed25519::SecretKey(SK11).read_public(&mut pk);
+    assert_eq!(&pk.0, &PK11);
 
-    ed25519::sign(&mut sig, &SK11, &MSG11);
-    assert_eq!(&sig[..], &SIG11[..]);
+    ed25519::SecretKey(SK11).signature(&MSG11, &mut sig);
+    assert_eq!(&sig.0[..], &SIG11[..]);
 
-    assert!(ed25519::verify(&pk, &MSG11, &sig));
+    assert!(ed25519::PublicKey(PK11).verify(&MSG11, &sig));
 }
