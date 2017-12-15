@@ -13,7 +13,7 @@ fn test_salsa() {
     let mut buf = [0; 512];
     let mut key = [0; 32];
     key[0] = 0x80;
-    let nonce = [0; 32];
+    let nonce = [0; 8];
 
     salsa20::Key(&key).nonce(&nonce).process(&mut buf);
 

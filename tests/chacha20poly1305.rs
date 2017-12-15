@@ -50,7 +50,7 @@ fn test_aead() {
     assert_eq!(tag, XMAC);
 
     let r = chacha20poly1305::Key(&KEY).nonce(&NONCE)
-        .decrypt(&AAD, &tag, &mut output);
+        .decrypt(&AAD, &mut output, &tag);
     assert!(r);
     assert_eq!(&output[..], &PLAINTEXT[..]);
 
@@ -60,7 +60,7 @@ fn test_aead() {
 
         output.clone_from(&XCIPHERTEXT);
         output[42] = 0x00;
-        assert!(!ChaCha20Poly1305::decrypt(And(Key(&KEY), Nonce(&NONCE)), &AAD, &tag, &mut output));
+        assert!(!ChaCha20Poly1305::decrypt(And(Key(&KEY), Nonce(&NONCE)), &AAD, &mut output, &tag));
         assert_ne!(&output[..], &PLAINTEXT[..]);
     }
 }

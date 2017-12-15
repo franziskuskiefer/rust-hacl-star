@@ -3,7 +3,7 @@ use ::And;
 
 
 pub const KEY_LENGTH: usize = 32;
-pub const NONCE_LENGTH: usize = 32;
+pub const NONCE_LENGTH: usize = 8;
 pub const BLOCK_LENGTH: usize = 64;
 
 pub type Salsa20<'a, 'b> = And<Key<'a>, Nonce<'b>>;
@@ -46,14 +46,15 @@ impl<'a, 'b> Salsa20<'a, 'b> {
             );
         }
     }
+}
 
-    pub fn hasalsa20(self, output: &mut [u8; 32]) {
-        unsafe {
-            ffi::salsa20::Hacl_Salsa20_hsalsa20(
-                output.as_mut_ptr(),
-                (self.0).0.as_ptr() as _,
-                (self.1).0.as_ptr() as _
-            );
-        }
+
+pub fn hasalsa20(output: &mut [u8; 32], key: &[u8; KEY_LENGTH], nonce: &[u8; 16]) {
+    unsafe {
+        ffi::salsa20::Hacl_Salsa20_hsalsa20(
+            output.as_mut_ptr(),
+            nonce.as_ptr() as _,
+            key.as_ptr() as _
+        );
     }
 }

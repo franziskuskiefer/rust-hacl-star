@@ -34,7 +34,7 @@ impl<'a, 'b> ChaCha20Poly1305<'a, 'b> {
         }
     }
 
-    pub fn decrypt(self, aad: &[u8], mac: &[u8; MAC_LENGTH], c: &mut [u8]) -> bool {
+    pub fn decrypt(self, aad: &[u8], c: &mut [u8], mac: &[u8; MAC_LENGTH]) -> bool {
         unsafe {
             ffi::chacha20poly1305::Hacl_Chacha20Poly1305_aead_decrypt(
                 c.as_mut_ptr(),
