@@ -8,17 +8,26 @@ use std::path::PathBuf;
 fn main() {
     let outdir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
-    cc::Build::new()
-        .flag_if_supported("-std=gnu99")
+    let mut cc = cc::Build::new();
+
+    #[cfg(any(target_pointer_width = "32", target_env = "msvc"))]
+    cc
+        .shared_flag(true)
+        .flag("-DKRML_NOUINT128")
+        .flag_if_supported("-Wno-unused-function")
+        .file("hacl-c/FStar.c");
+
+    cc
+        .flag_if_supported(
+            if cc::Build::new().get_compiler().is_like_gnu() || cc::Build::new().get_compiler().is_like_clang()
+            { "-std=gnu11" } else { "-std=c11" }
+        )
+        .include("hacl-c")
 
         // from https://github.com/mitls/hacl-star/blob/master/snapshots/hacl-c/Makefile#L8
-        .flag("-fwrapv")
-        .flag("-fomit-frame-pointer")
-        .flag("-funroll-loops")
-
-        // ignore some warnings
-        .flag("-Wno-unused-parameter")
-        .flag("-Wno-unused-variable")
+        .flag_if_supported("-fwrapv")
+        .flag_if_supported("-fomit-frame-pointer")
+        .flag_if_supported("-funroll-loops")
 
         .files(&[
             "hacl-c/Hacl_Salsa20.c",
@@ -36,6 +45,11 @@ fn main() {
             "hacl-c/Hacl_Policies.c",
             "hacl-c/NaCl.c"
         ])
+
+        // ignore some warnings
+        .flag_if_supported("-Wno-unused-parameter")
+        .flag_if_supported("-Wno-unused-variable")
+
         .compile("hacl");
 
     macro_rules! bindgen {
