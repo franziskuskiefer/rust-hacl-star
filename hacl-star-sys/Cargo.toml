@@ -1,6 +1,6 @@
 [package]
 name = "hacl-star-sys"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["quininer <quininer@live.com>"]
 description = "HACL* FFI"
 keywords = [ "hacl-star", "cryptographic" ]
