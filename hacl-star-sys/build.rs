@@ -1,13 +1,11 @@
 extern crate cc;
-extern crate bindgen;
+#[cfg(feature = "bindgen")] extern crate bindgen;
 
-use std::env;
-use std::path::PathBuf;
+#[cfg(feature = "bindgen")] use std::env;
+#[cfg(feature = "bindgen")] use std::path::PathBuf;
 
 
 fn main() {
-    let outdir = PathBuf::from(env::var("OUT_DIR").unwrap());
-
     let mut cc = cc::Build::new();
 
     #[cfg(any(target_pointer_width = "32", target_env = "msvc"))]
@@ -52,6 +50,11 @@ fn main() {
 
         .compile("hacl");
 
+    #[cfg(feature = "bindgen")]
+    let outdir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap())
+        .join("src");
+
+    #[cfg(feature = "bindgen")]
     macro_rules! bindgen {
         ( @bind $input:expr => $output:expr , $white:expr ) => {
             bindgen::Builder::default()
@@ -71,6 +74,7 @@ fn main() {
         }
     }
 
+    #[cfg(feature = "bindgen")]
     bindgen!{
         "hacl-c/AEAD_Poly1305_64.h"      => "aead_poly1305.rs",      "AEAD_Poly1305_.+";
         "hacl-c/Hacl_Salsa20.h"          => "salsa20.rs",            "Hacl_Salsa20_.+";

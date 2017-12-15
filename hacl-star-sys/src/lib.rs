@@ -5,22 +5,16 @@
 
 extern crate libc;
 
-macro_rules! ffi {
-    ( $( $name:ident ),* ) => {
-        $(
-            pub mod $name {
-                include!(concat!(env!("OUT_DIR"), "/", stringify!($name), ".rs"));
-            }
-        )*
-    }
-}
-
-ffi!{
-    aead_poly1305,
-    chacha20poly1305,
-    salsa20, chacha20, poly1305,
-    hmac_sha2_256, sha2_256, sha2_384, sha2_512,
-    ed25519, curve25519,
-    hacl_policies,
-    nacl
-}
+pub mod aead_poly1305;
+pub mod chacha20poly1305;
+pub mod salsa20;
+pub mod chacha20;
+pub mod poly1305;
+pub mod hmac_sha2_256;
+pub mod sha2_256;
+pub mod sha2_384;
+pub mod sha2_512;
+pub mod ed25519;
+pub mod curve25519;
+pub mod hacl_policies;
+pub mod nacl;

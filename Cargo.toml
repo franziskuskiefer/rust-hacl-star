@@ -10,6 +10,9 @@ license = "MIT"
 
 [workspace]
 
+[features]
+bindgen = [ "hacl-star-sys/bindgen" ]
+
 [dependencies]
 libc = { version = "0.2", default-features = false }
 hacl-star-sys = { version = "0.0.2", path = "hacl-star-sys" }
