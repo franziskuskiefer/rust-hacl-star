@@ -11,7 +11,7 @@ fn main() {
     #[cfg(any(target_pointer_width = "32", target_env = "msvc"))]
     cc
         .shared_flag(true)
-        .flag("-DKRML_NOUINT128")
+        .define("KRML_NOUINT128", None)
         .flag_if_supported("-Wno-unused-function")
         .file("hacl-c/FStar.c");
 

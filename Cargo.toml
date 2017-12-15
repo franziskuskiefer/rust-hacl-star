@@ -6,12 +6,17 @@ description = "HACL*, a formally verified cryptographic library for Rust (bindin
 keywords = [ "hacl-star", "cryptographic" ]
 categories = [ "cryptography" ]
 repository = "https://github.com/quininer/rust-hacl-star"
+documentation = "https://docs.rs/hacl-star/"
 license = "MIT"
 
 [workspace]
 
 [features]
 bindgen = [ "hacl-star-sys/bindgen" ]
+
+[badges]
+travis-ci = { repository = "quininer/hacl-star" }
+appveyor = { repository = "quininer/hacl-star" }
 
 [dependencies]
 libc = { version = "0.2", default-features = false }

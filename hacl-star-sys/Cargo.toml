@@ -6,6 +6,7 @@ description = "HACL* FFI"
 keywords = [ "hacl-star", "cryptographic" ]
 categories = [ "no-std", "cryptography", "api-bindings" ]
 repository = "https://github.com/quininer/rust-hacl-star"
+documentation = "https://docs.rs/hacl-star-sys/"
 license = "MIT"
 
 [dependencies]
