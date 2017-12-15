@@ -22,28 +22,32 @@ pub mod secret {
     }
 
     impl<'a, 'b> SecretBox<'a, 'b> {
-        pub fn seal(self, m: &[u8], c: &mut [u8]) {
-            assert_eq!(c.len(), m.len() + MAC_LENGTH);
+        pub fn seal(self, m: &[u8], c: &mut [u8], mac: &mut [u8; MAC_LENGTH]) {
+            assert!(c.len() > 32);
+            assert_eq!(c.len(), m.len());
 
             unsafe {
-                ffi::nacl::NaCl_crypto_secretbox_easy(
+                ffi::nacl::NaCl_crypto_secretbox_detached(
                     c.as_mut_ptr(),
+                    mac.as_mut_ptr(),
                     m.as_ptr() as _,
-                    m.len() as _,
+                    (m.len() - 32) as _,
                     (self.1).0.as_ptr() as _,
                     (self.0).0.as_ptr() as _
                 );
             }
         }
 
-        pub fn open(self, c: &[u8], m: &mut [u8]) -> bool {
-            assert_eq!(c.len(), m.len() - MAC_LENGTH);
+        pub fn open(self, m: &mut [u8], c: &[u8], mac: &[u8; MAC_LENGTH]) -> bool {
+            assert!(c.len() > 32);
+            assert_eq!(c.len(), m.len());
 
             unsafe {
-                ffi::nacl::NaCl_crypto_secretbox_open_easy(
+                ffi::nacl::NaCl_crypto_secretbox_open_detached(
                     m.as_mut_ptr(),
                     c.as_ptr() as _,
-                    c.len() as _,
+                    mac.as_ptr() as _,
+                    (c.len() - 32) as _,
                     (self.1).0.as_ptr() as _,
                     (self.0).0.as_ptr() as _
                 ) == 0
@@ -82,13 +86,15 @@ pub mod sealed {
     }
 
     impl<'a, 'b, 'c> SealedBox<'a, 'b, 'c> {
-        pub fn seal(self, m: &mut [u8], mac: &mut [u8; MAC_LENGTH]) {
+        pub fn seal(self, m: &[u8], c: &mut [u8], mac: &mut [u8; MAC_LENGTH]) {
+            assert_eq!(m.len(), c.len());
+
             unsafe {
                 ffi::nacl::NaCl_crypto_box_detached(
-                    m.as_mut_ptr(),
+                    c.as_mut_ptr(),
                     mac.as_mut_ptr(),
                     m.as_ptr() as _,
-                    m.len() as _,
+                    (m.len() - 32) as _,
                     (self.1).0.as_ptr() as _,
                     ((self.0).1).0.as_ptr() as _,
                     ((self.0).0).0.as_ptr() as _,
@@ -96,13 +102,15 @@ pub mod sealed {
             }
         }
 
-        pub fn open(self, m: &mut [u8], mac: &[u8; MAC_LENGTH]) -> bool {
+        pub fn open(self, m: &mut [u8], c: &[u8], mac: &[u8; MAC_LENGTH]) -> bool {
+            assert_eq!(m.len(), c.len());
+
             unsafe {
                 ffi::nacl::NaCl_crypto_box_open_detached(
                     m.as_mut_ptr(),
-                    m.as_ptr() as _,
+                    c.as_ptr() as _,
                     mac.as_ptr() as _,
-                    m.len() as _,
+                    (c.len() - 32) as _,
                     (self.1).0.as_ptr() as _,
                     ((self.0).1).0.as_ptr() as _,
                     ((self.0).0).0.as_ptr() as _,
