@@ -12,15 +12,14 @@ fn main() {
         .flag_if_supported("-std=gnu99")
 
         // from https://github.com/mitls/hacl-star/blob/master/snapshots/hacl-c/Makefile#L8
-        .flag("-Ofast")
         .flag("-fwrapv")
         .flag("-fomit-frame-pointer")
         .flag("-funroll-loops")
-        .flag("-fPIC")
 
         // ignore some warnings
         .flag("-Wno-unused-parameter")
         .flag("-Wno-unused-variable")
+
         .files(&[
             "hacl-c/Hacl_Salsa20.c",
             "hacl-c/Hacl_Poly1305_64.c",
@@ -68,7 +67,7 @@ fn main() {
         "hacl-c/Hacl_SHA2_384.h"         => "sha2_384.rs",           "Hacl_SHA2_384_.+";
         "hacl-c/Hacl_SHA2_512.h"         => "sha2_512.rs",           "Hacl_SHA2_512_.+";
         "hacl-c/Hacl_Ed25519.h"          => "ed25519.rs",            "Hacl_Ed25519_.+";
-        "hacl-c/Hacl_Curve25519.h"       => "curve25519.rs",         "Hacl_(Curve25519|EC)_.+";
+        "hacl-c/Hacl_Curve25519.h"       => "curve25519.rs",         "Hacl_Curve25519_.+";
         "hacl-c/Hacl_Chacha20Poly1305.h" => "chacha20poly1305.rs",   "Hacl_Chacha20Poly1305_.+";
         "hacl-c/Hacl_Policies.h"         => "hacl_policies.rs",      "Hacl_Policies_.+";
         "hacl-c/NaCl.h"                  => "nacl.rs",               "NaCl_.+"

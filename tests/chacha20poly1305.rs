@@ -45,11 +45,22 @@ fn test_aead() {
 
     output.clone_from(&PLAINTEXT);
     chacha20poly1305::Key(&KEY).nonce(&NONCE)
-        .aead_encrypt(&AAD, &mut output, &mut tag);
+        .encrypt(&AAD, &mut output, &mut tag);
     assert_eq!(&output[..], &XCIPHERTEXT[..]);
     assert_eq!(tag, XMAC);
 
-    chacha20poly1305::Key(&KEY).nonce(&NONCE)
-        .aead_decrypt(&AAD, &tag, &mut output);
+    let r = chacha20poly1305::Key(&KEY).nonce(&NONCE)
+        .decrypt(&AAD, &tag, &mut output);
+    assert!(r);
     assert_eq!(&output[..], &PLAINTEXT[..]);
+
+    {
+        use hacl_star::And;
+        use chacha20poly1305::*;
+
+        output.clone_from(&XCIPHERTEXT);
+        output[42] = 0x00;
+        assert!(!ChaCha20Poly1305::decrypt(And(Key(&KEY), Nonce(&NONCE)), &AAD, &tag, &mut output));
+        assert_ne!(&output[..], &PLAINTEXT[..]);
+    }
 }

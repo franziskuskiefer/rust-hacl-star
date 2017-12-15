@@ -19,7 +19,7 @@ impl<'a, 'b> Key<'a> {
 }
 
 impl<'a, 'b> ChaCha20<'a, 'b> {
-    pub fn chacha20(self, buf: &mut [u8]) {
+    pub fn process(self, buf: &mut [u8]) {
         unsafe {
             ffi::chacha20::Hacl_Chacha20_chacha20(
                 buf.as_mut_ptr(),
@@ -32,7 +32,7 @@ impl<'a, 'b> ChaCha20<'a, 'b> {
         }
     }
 
-    pub fn chacha20_ic(self, ctr: u32, input: &[u8], output: &mut [u8]) {
+    pub fn process_ic(self, ctr: u32, input: &[u8], output: &mut [u8]) {
         assert!(output.len() >= input.len());
 
         unsafe {
@@ -47,7 +47,7 @@ impl<'a, 'b> ChaCha20<'a, 'b> {
         }
     }
 
-    pub fn chacha20_keyblock(self, ctr: u32, block: &mut [u8; BLOCK_LENGTH]) {
+    pub fn keyblock(self, ctr: u32, block: &mut [u8; BLOCK_LENGTH]) {
         unsafe {
             ffi::chacha20::Hacl_Chacha20_chacha20_key_block(
                 block.as_mut_ptr(),

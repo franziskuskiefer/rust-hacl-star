@@ -46,4 +46,7 @@ fn test_ed25519() {
     assert_eq!(&sig.0[..], &SIG11[..]);
 
     assert!(ed25519::PublicKey(PK11).verify(&MSG11, &sig));
+
+    sig.0[23] = 0x00;
+    assert!(!ed25519::PublicKey(PK11).verify(&MSG11, &sig));
 }

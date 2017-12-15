@@ -19,7 +19,7 @@ impl<'a, 'b> Key<'a> {
 }
 
 impl<'a, 'b> Salsa20<'a, 'b> {
-    pub fn salsa20(self, buf: &mut [u8]) {
+    pub fn process(self, buf: &mut [u8]) {
         unsafe {
             ffi::salsa20::Hacl_Salsa20_salsa20(
                 buf.as_mut_ptr(),
@@ -32,7 +32,7 @@ impl<'a, 'b> Salsa20<'a, 'b> {
         }
     }
 
-    pub fn salsa20_ic(self, ctr: u64, input: &[u8], output: &mut [u8]) {
+    pub fn process_ic(self, ctr: u64, input: &[u8], output: &mut [u8]) {
         assert!(output.len() >= input.len());
 
         unsafe {

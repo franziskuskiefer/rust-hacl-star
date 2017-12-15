@@ -19,7 +19,7 @@ impl<'a, 'b> Key<'a> {
 }
 
 impl<'a, 'b> ChaCha20Poly1305<'a, 'b> {
-    pub fn aead_encrypt(self, aad: &[u8], m: &mut [u8], mac: &mut [u8; MAC_LENGTH]) {
+    pub fn encrypt(self, aad: &[u8], m: &mut [u8], mac: &mut [u8; MAC_LENGTH]) {
         unsafe {
             ffi::chacha20poly1305::Hacl_Chacha20Poly1305_aead_encrypt(
                 m.as_mut_ptr(),
@@ -34,7 +34,7 @@ impl<'a, 'b> ChaCha20Poly1305<'a, 'b> {
         }
     }
 
-    pub fn aead_decrypt(self, aad: &[u8], mac: &[u8; MAC_LENGTH], c: &mut [u8]) -> bool {
+    pub fn decrypt(self, aad: &[u8], mac: &[u8; MAC_LENGTH], c: &mut [u8]) -> bool {
         unsafe {
             ffi::chacha20poly1305::Hacl_Chacha20Poly1305_aead_decrypt(
                 c.as_mut_ptr(),
