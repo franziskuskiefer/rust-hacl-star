@@ -1,3 +1,4 @@
+use rand::Rng;
 use hacl_star_sys as ffi;
 use ::And;
 
@@ -59,6 +60,7 @@ pub mod secret {
 
 pub mod sealed {
     use super::*;
+    use ::curve25519;
 
     pub const PUBLIC_LENGTH: usize = 32;
     pub const SECRET_LENGTH: usize = 32;
@@ -67,9 +69,16 @@ pub mod sealed {
 
     pub type SealedBox<'a, 'b, 'c> = And<And<&'a SecretKey, &'b PublicKey>, Nonce<'c>>;
 
+    #[derive(Default, Clone)]
     pub struct SecretKey(pub [u8; SECRET_LENGTH]);
+    #[derive(Default, Clone)]
     pub struct PublicKey(pub [u8; PUBLIC_LENGTH]);
     pub struct Nonce<'a>(pub &'a [u8; NONCE_LENGTH]);
+
+    pub fn keypair<R: Rng>(rng: &mut R, sk: &mut SecretKey, pk: &mut PublicKey) {
+        rng.fill_bytes(&mut sk.0);
+        curve25519::scalarmult(&mut pk.0, &sk.0, &curve25519::BASEPOINT);
+    }
 
     impl SecretKey {
         #[inline]
@@ -87,6 +96,7 @@ pub mod sealed {
 
     impl<'a, 'b, 'c> SealedBox<'a, 'b, 'c> {
         pub fn seal(self, m: &[u8], c: &mut [u8], mac: &mut [u8; MAC_LENGTH]) {
+            assert!(c.len() > 32);
             assert_eq!(m.len(), c.len());
 
             unsafe {
@@ -103,6 +113,7 @@ pub mod sealed {
         }
 
         pub fn open(self, m: &mut [u8], c: &[u8], mac: &[u8; MAC_LENGTH]) -> bool {
+            assert!(c.len() > 32);
             assert_eq!(m.len(), c.len());
 
             unsafe {
