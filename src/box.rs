@@ -75,9 +75,13 @@ pub mod sealed {
     pub struct PublicKey(pub [u8; PUBLIC_LENGTH]);
     pub struct Nonce<'a>(pub &'a [u8; NONCE_LENGTH]);
 
-    pub fn keypair<R: Rng>(rng: &mut R, sk: &mut SecretKey, pk: &mut PublicKey) {
-        rng.fill_bytes(&mut sk.0);
-        curve25519::scalarmult(&mut pk.0, &sk.0, &curve25519::BASEPOINT);
+    pub fn keypair<R: Rng>(
+        mut rng: R,
+        &mut SecretKey(ref mut sk): &mut SecretKey,
+        &mut PublicKey(ref mut pk): &mut PublicKey
+    ) {
+        rng.fill_bytes(sk);
+        curve25519::scalarmult(pk, sk, &curve25519::BASEPOINT);
     }
 
     impl SecretKey {

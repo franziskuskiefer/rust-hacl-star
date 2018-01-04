@@ -13,7 +13,7 @@ pub struct PublicKey(pub [u8; PUBLIC_LENGTH]);
 pub struct Signature(pub [u8; SIGN_LENGTH]);
 
 
-pub fn keypair<R: Rng>(rng: &mut R, sk: &mut SecretKey, pk: &mut PublicKey) {
+pub fn keypair<R: Rng>(mut rng: R, sk: &mut SecretKey, pk: &mut PublicKey) {
     rng.fill_bytes(&mut sk.0);
     sk.read_public(pk);
 }
@@ -45,13 +45,13 @@ impl SecretKey {
 }
 
 impl PublicKey {
-    pub fn verify(self, msg: &[u8], sign: &Signature) -> bool {
+    pub fn verify(self, msg: &[u8], &Signature(ref sig): &Signature) -> bool {
         unsafe {
             ffi::ed25519::Hacl_Ed25519_verify(
                 self.0.as_ptr() as _,
                 msg.as_ptr() as _,
                 msg.len() as _,
-                sign.0.as_ptr() as _
+                sig.as_ptr() as _
             )
         }
     }
