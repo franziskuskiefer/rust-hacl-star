@@ -10,22 +10,37 @@ pub const SIGN_LENGTH  : usize = 64;
 pub struct SecretKey(pub [u8; SECRET_LENGTH]);
 #[derive(Default, Clone)]
 pub struct PublicKey(pub [u8; PUBLIC_LENGTH]);
+#[derive(Clone)]
 pub struct Signature(pub [u8; SIGN_LENGTH]);
 
 
-pub fn keypair<R: Rng>(mut rng: R, sk: &mut SecretKey, pk: &mut PublicKey) {
-    rng.fill_bytes(&mut sk.0);
-    sk.read_public(pk);
+pub fn keypair<R: Rng>(
+    mut rng: R,
+    &mut SecretKey(ref mut sk): &mut SecretKey,
+    &mut PublicKey(ref mut pk): &mut PublicKey
+) {
+    rng.fill_bytes(sk);
+    unsafe {
+        ffi::ed25519::Hacl_Ed25519_secret_to_public(
+            pk.as_mut_ptr(),
+            sk.as_ptr() as _
+        );
+    }
 }
 
 impl SecretKey {
-    pub fn read_public(&self, pubkey: &mut PublicKey) {
+    #[inline]
+    pub fn read_public(&self) -> PublicKey {
+        let mut pk = [0; PUBLIC_LENGTH];
+
         unsafe {
             ffi::ed25519::Hacl_Ed25519_secret_to_public(
-                pubkey.0.as_mut_ptr(),
+                pk.as_mut_ptr(),
                 self.0.as_ptr() as _
             );
         }
+
+        PublicKey(pk)
     }
 
     pub fn signature(&self, msg: &[u8]) -> Signature {

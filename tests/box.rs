@@ -97,10 +97,10 @@ fn test_sealedbox() {
     let pk1 = sealed::PublicKey(pk1);
     let pk2 = sealed::PublicKey(pk2);
 
-    sealed::SecretKey(SK1).to(&pk2).nonce(&NONCE)
+    sealed::SecretKey(SK1).and(&pk2).nonce(&NONCE)
         .seal(&MSG, &mut ct, &mut tag);
 
-    let r = sealed::SecretKey(SK2).to(&pk1).nonce(&NONCE)
+    let r = sealed::SecretKey(SK2).and(&pk1).nonce(&NONCE)
         .open(&mut pt, &ct, &tag);
     assert!(r);
     assert_eq!(&pt[..], &MSG[..]);

@@ -86,7 +86,7 @@ pub mod sealed {
 
     impl SecretKey {
         #[inline]
-        pub fn to<'a, 'b>(&'a self, pk: &'b PublicKey) -> And<&'a SecretKey, &'b PublicKey> {
+        pub fn and<'a, 'b>(&'a self, pk: &'b PublicKey) -> And<&'a SecretKey, &'b PublicKey> {
             And(self, pk)
         }
     }

@@ -59,7 +59,7 @@ fn test_aead() {
         use chacha20poly1305::*;
 
         output.clone_from(&XCIPHERTEXT);
-        output[42] = 0x00;
+        output[42] ^= 0x01;
         assert!(!ChaCha20Poly1305::decrypt(And(Key(&KEY), Nonce(&NONCE)), &AAD, &mut output, &tag));
         assert_ne!(&output[..], &PLAINTEXT[..]);
     }
