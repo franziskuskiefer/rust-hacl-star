@@ -29,6 +29,7 @@ fn main() {
 
         .files(&[
             "hacl-c/Hacl_Salsa20.c",
+            "hacl-c/Hacl_Poly1305_32.c",
             "hacl-c/Hacl_Poly1305_64.c",
             "hacl-c/Hacl_Chacha20.c",
             "hacl-c/AEAD_Poly1305_64.c",
@@ -90,6 +91,4 @@ fn main() {
         "hacl-c/Hacl_Policies.h"         => "hacl_policies.rs",      "Hacl_Policies_.+";
         "hacl-c/NaCl.h"                  => "nacl.rs",               "NaCl_.+"
     };
-
-    println!("cargo:rustc-link-lib=static=hacl");
 }
