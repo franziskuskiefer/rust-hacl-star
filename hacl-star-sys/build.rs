@@ -15,6 +15,11 @@ fn main() {
         .flag_if_supported("-Wno-unused-function")
         .file("hacl-c/FStar.c");
 
+    #[cfg(all(target_arch = "wasm32", not(target_os = "emscripten")))]
+    cc
+        .compiler("clang")
+        .target("wasm32-unknown-unknown-wasm");
+
     cc
         .flag_if_supported(
             if cc::Build::new().get_compiler().is_like_gnu() || cc::Build::new().get_compiler().is_like_clang()
