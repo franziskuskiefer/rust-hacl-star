@@ -4,6 +4,7 @@ pub type __uint8_t = ::libc::c_uchar;
 pub type __int32_t = ::libc::c_int;
 pub type __uint32_t = ::libc::c_uint;
 pub type __uint64_t = ::libc::c_ulong;
+
 pub type Prims_int = i32;
 extern "C" {
     #[link_name = "\u{1}NaCl_crypto_box_NONCEBYTES"]

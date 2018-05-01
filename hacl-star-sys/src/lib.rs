@@ -3,7 +3,17 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
+#[cfg(not(all(target_arch = "wasm32", not(target_os = "emscripten"))))]
 extern crate libc;
+
+#[cfg(all(target_arch = "wasm32", not(target_os = "emscripten")))]
+mod libc {
+    pub type c_void = u8;
+    pub type c_int = i32;
+    pub type c_uint = u32;
+    pub type c_ulong = u32;
+    pub type c_uchar = u8;
+}
 
 pub mod aead_poly1305;
 pub mod chacha20poly1305;

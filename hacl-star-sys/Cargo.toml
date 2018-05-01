@@ -14,4 +14,4 @@ libc = { version = "0.2", default-features = false }
 
 [build-dependencies]
 cc = "1.0"
-bindgen = { version = "0.32", optional = true }
+bindgen = { version = "0.36", optional = true }

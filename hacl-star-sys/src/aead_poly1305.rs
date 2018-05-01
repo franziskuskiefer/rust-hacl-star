@@ -4,7 +4,9 @@ pub type __uint8_t = ::libc::c_uchar;
 pub type __int32_t = ::libc::c_int;
 pub type __uint32_t = ::libc::c_uint;
 pub type __uint64_t = ::libc::c_ulong;
+
 pub type Prims_nat = i32;
+
 pub type Prims_int = i32;
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
