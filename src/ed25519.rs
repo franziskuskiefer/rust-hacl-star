@@ -1,4 +1,4 @@
-use rand::Rng;
+use rand_core::{ RngCore, CryptoRng };
 use hacl_star_sys as ffi;
 
 
@@ -14,7 +14,7 @@ pub struct PublicKey(pub [u8; PUBLIC_LENGTH]);
 pub struct Signature(pub [u8; SIGN_LENGTH]);
 
 
-pub fn keypair<R: Rng>(
+pub fn keypair<R: RngCore + CryptoRng>(
     mut rng: R,
     &mut SecretKey(ref mut sk): &mut SecretKey,
     &mut PublicKey(ref mut pk): &mut PublicKey

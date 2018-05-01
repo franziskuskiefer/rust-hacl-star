@@ -1,6 +1,6 @@
 #![no_std]
 
-extern crate rand;
+extern crate rand_core;
 extern crate hacl_star_sys;
 
 pub mod sha2;
