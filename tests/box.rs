@@ -85,14 +85,16 @@ fn test_sealedbox() {
     use hacl_star::curve25519;
     use box_::sealed;
 
+    const BASEPOINT: [u8; 32] = [9; 32];
+
     let mut pk1 = [0; 32];
     let mut pk2 = [0; 32];
     let mut ct = [0; 72 + 32];
     let mut pt = [0; 72 + 32];
     let mut tag = [0; 16];
 
-    curve25519::scalarmult(&mut pk1, &SK1, &curve25519::BASEPOINT);
-    curve25519::scalarmult(&mut pk2, &SK2, &curve25519::BASEPOINT);
+    curve25519::scalarmult(&mut pk1, &SK1, &BASEPOINT);
+    curve25519::scalarmult(&mut pk2, &SK2, &BASEPOINT);
 
     let pk1 = sealed::PublicKey(pk1);
     let pk2 = sealed::PublicKey(pk2);

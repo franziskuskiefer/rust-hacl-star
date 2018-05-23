@@ -31,12 +31,13 @@ pub fn keypair<R: RngCore + CryptoRng>(
 impl SecretKey {
     #[inline]
     pub fn read_public(&self) -> PublicKey {
+        let SecretKey(sk) = self;
         let mut pk = [0; PUBLIC_LENGTH];
 
         unsafe {
             ffi::ed25519::Hacl_Ed25519_secret_to_public(
                 pk.as_mut_ptr(),
-                self.0.as_ptr() as _
+                sk.as_ptr() as _
             );
         }
 
@@ -44,12 +45,13 @@ impl SecretKey {
     }
 
     pub fn signature(&self, msg: &[u8]) -> Signature {
+        let SecretKey(sk) = self;
         let mut sig = [0; SIGN_LENGTH];
 
         unsafe {
             ffi::ed25519::Hacl_Ed25519_sign(
                 sig.as_mut_ptr(),
-                self.0.as_ptr() as _,
+                sk.as_ptr() as _,
                 msg.as_ptr() as _,
                 msg.len() as _
             );
@@ -61,9 +63,11 @@ impl SecretKey {
 
 impl PublicKey {
     pub fn verify(self, msg: &[u8], &Signature(ref sig): &Signature) -> bool {
+        let PublicKey(pk) = self;
+
         unsafe {
             ffi::ed25519::Hacl_Ed25519_verify(
-                self.0.as_ptr() as _,
+                pk.as_ptr() as _,
                 msg.as_ptr() as _,
                 msg.len() as _,
                 sig.as_ptr() as _

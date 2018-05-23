@@ -1,4 +1,3 @@
-use rand_core::{ RngCore, CryptoRng };
 use hacl_star_sys as ffi;
 use ::And;
 
@@ -27,14 +26,16 @@ pub mod secret {
             assert!(c.len() > 32);
             assert_eq!(c.len(), m.len());
 
+            let And(Key(key), Nonce(nonce)) = self;
+
             unsafe {
                 ffi::nacl::NaCl_crypto_secretbox_detached(
                     c.as_mut_ptr(),
                     mac.as_mut_ptr(),
                     m.as_ptr() as _,
                     (m.len() - 32) as _,
-                    (self.1).0.as_ptr() as _,
-                    (self.0).0.as_ptr() as _
+                    nonce.as_ptr() as _,
+                    key.as_ptr() as _
                 );
             }
         }
@@ -43,14 +44,16 @@ pub mod secret {
             assert!(c.len() > 32);
             assert_eq!(c.len(), m.len());
 
+            let And(Key(key), Nonce(nonce)) = self;
+
             unsafe {
                 ffi::nacl::NaCl_crypto_secretbox_open_detached(
                     m.as_mut_ptr(),
                     c.as_ptr() as _,
                     mac.as_ptr() as _,
                     (c.len() - 32) as _,
-                    (self.1).0.as_ptr() as _,
-                    (self.0).0.as_ptr() as _
+                    nonce.as_ptr() as _,
+                    key.as_ptr() as _
                 ) == 0
             }
         }
@@ -60,29 +63,17 @@ pub mod secret {
 
 pub mod sealed {
     use super::*;
-    use ::curve25519;
-
-    pub const PUBLIC_LENGTH: usize = 32;
-    pub const SECRET_LENGTH: usize = 32;
-    pub const NONCE_LENGTH: usize = 24;
-    pub const MAC_LENGTH: usize = 16;
+    pub use ::curve25519::{
+        PUBLIC_LENGTH, SECRET_LENGTH,
+        SecretKey, PublicKey,
+        keypair
+    };
+    pub use super::secret::{
+        NONCE_LENGTH, MAC_LENGTH,
+        Nonce
+    };
 
     pub type SealedBox<'a, 'b, 'c> = And<And<&'a SecretKey, &'b PublicKey>, Nonce<'c>>;
-
-    #[derive(Default, Clone)]
-    pub struct SecretKey(pub [u8; SECRET_LENGTH]);
-    #[derive(Default, Clone)]
-    pub struct PublicKey(pub [u8; PUBLIC_LENGTH]);
-    pub struct Nonce<'a>(pub &'a [u8; NONCE_LENGTH]);
-
-    pub fn keypair<R: RngCore + CryptoRng>(
-        mut rng: R,
-        &mut SecretKey(ref mut sk): &mut SecretKey,
-        &mut PublicKey(ref mut pk): &mut PublicKey
-    ) {
-        rng.fill_bytes(sk);
-        curve25519::scalarmult(pk, sk, &curve25519::BASEPOINT);
-    }
 
     impl SecretKey {
         #[inline]
@@ -103,15 +94,17 @@ pub mod sealed {
             assert!(c.len() > 32);
             assert_eq!(m.len(), c.len());
 
+            let And(And(SecretKey(sk), PublicKey(pk)), Nonce(nonce)) = self;
+
             unsafe {
                 ffi::nacl::NaCl_crypto_box_detached(
                     c.as_mut_ptr(),
                     mac.as_mut_ptr(),
                     m.as_ptr() as _,
                     (m.len() - 32) as _,
-                    (self.1).0.as_ptr() as _,
-                    ((self.0).1).0.as_ptr() as _,
-                    ((self.0).0).0.as_ptr() as _,
+                    nonce.as_ptr() as _,
+                    pk.as_ptr() as _,
+                    sk.as_ptr() as _
                 );
             }
         }
@@ -120,15 +113,17 @@ pub mod sealed {
             assert!(c.len() > 32);
             assert_eq!(m.len(), c.len());
 
+            let And(And(SecretKey(sk), PublicKey(pk)), Nonce(nonce)) = self;
+
             unsafe {
                 ffi::nacl::NaCl_crypto_box_open_detached(
                     m.as_mut_ptr(),
                     c.as_ptr() as _,
                     mac.as_ptr() as _,
                     (c.len() - 32) as _,
-                    (self.1).0.as_ptr() as _,
-                    ((self.0).1).0.as_ptr() as _,
-                    ((self.0).0).0.as_ptr() as _,
+                    nonce.as_ptr() as _,
+                    pk.as_ptr() as _,
+                    sk.as_ptr() as _
                 ) == 0
             }
         }

@@ -1,3 +1,4 @@
+extern crate rand;
 extern crate hacl_star;
 
 use hacl_star::curve25519;
@@ -19,4 +20,22 @@ fn test_curve25519() {
 
     curve25519::scalarmult(&mut output, &SCALAR2, &INPUT2);
     assert_eq!(output, EXPECTED2);
+}
+
+#[test]
+fn test_curve25519_kx() {
+    use rand::OsRng;
+    use curve25519::*;
+
+    let (mut sk1, mut pk1) = (SecretKey::default(), PublicKey::default());
+    let (mut sk2, mut pk2) = (SecretKey::default(), PublicKey::default());
+    let (mut out1, mut out2) = ([0; 32], [0; 32]);
+
+    keypair(OsRng::new().unwrap(), &mut sk1, &mut pk1);
+    keypair(OsRng::new().unwrap(), &mut sk2, &mut pk2);
+
+    sk1.exchange(&pk2, &mut out1);
+    sk2.exchange(&pk1, &mut out2);
+
+    assert_eq!(out1, out2);
 }
