@@ -58,12 +58,12 @@ macro_rules! sha2 {
 
                 let buf = &buf[br..];
                 let len = buf.len();
-                let n1 = len / $block;
+                let n = len / $block;
                 let r = len % $block;
 
-                unsafe { $update_multi(self.state.as_mut_ptr(), buf.as_ptr() as _, n1 as _) };
+                unsafe { $update_multi(self.state.as_mut_ptr(), buf.as_ptr() as _, n as _) };
 
-                self.block[..r].copy_from_slice(&buf[n1 * $block..][..r]);
+                self.block[..r].copy_from_slice(&buf[n * $block..][..r]);
                 self.pos = r;
             }
 
