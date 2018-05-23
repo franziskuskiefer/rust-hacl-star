@@ -30,7 +30,7 @@ pub fn keypair<R: RngCore + CryptoRng>(
 
 impl SecretKey {
     #[inline]
-    pub fn read_public(&self) -> PublicKey {
+    pub fn get_public(&self) -> PublicKey {
         let SecretKey(sk) = self;
         let mut pk = [0; PUBLIC_LENGTH];
 

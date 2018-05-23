@@ -36,7 +36,7 @@ const SIG11: [u8; 64] = [
 
 #[test]
 fn test_ed25519() {
-    let pk = ed25519::SecretKey(SK11).read_public();
+    let pk = ed25519::SecretKey(SK11).get_public();
     assert_eq!(&pk.0, &PK11);
 
     let mut sig = ed25519::SecretKey(SK11).signature(&MSG11);
