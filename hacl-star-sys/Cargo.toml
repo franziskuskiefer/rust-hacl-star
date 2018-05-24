@@ -1,6 +1,6 @@
 [package]
 name = "hacl-star-sys"
-version = "0.0.5"
+version = "0.0.6"
 authors = ["quininer <quininer@live.com>"]
 description = "HACL* FFI"
 keywords = [ "hacl-star", "cryptographic" ]
@@ -9,9 +9,12 @@ repository = "https://github.com/quininer/rust-hacl-star"
 documentation = "https://docs.rs/hacl-star-sys/"
 license = "MIT"
 
+[features]
+use_std = [ "libc/use_std" ]
+
 [dependencies]
 libc = { version = "0.2", default-features = false }
 
 [build-dependencies]
 cc = "1.0"
-bindgen = { version = "0.36", optional = true }
+bindgen = { version = "0.37", optional = true }

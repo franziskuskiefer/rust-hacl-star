@@ -2,7 +2,7 @@ use rand_core::{ RngCore, CryptoRng };
 use hacl_star_sys as ffi;
 
 
-const BASEPOINT: [u8; 32] = [9; 32];
+const BASEPOINT: [u8; 32] = [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 pub const PUBLIC_LENGTH: usize = 32;
 pub const SECRET_LENGTH: usize = 32;
