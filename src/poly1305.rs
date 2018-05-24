@@ -1,16 +1,16 @@
 use hacl_star_sys as ffi;
 
 
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Debug)]
 struct Inner {
     r: [u64; 3],
     h: [u64; 3]
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Poly1305 {
     state: Inner,
-    key: [u8; 32],
+    key: [u8; 16],
     block: [u8; 16],
     pos: usize
 }
@@ -34,17 +34,18 @@ impl Poly1305 {
 impl Poly1305 {
     pub fn new(key: &[u8; 32]) -> Poly1305 {
         let mut state = Inner::default();
-        let mut keyblock = [0; 32];
-        keyblock[16..].copy_from_slice(&key[16..]);
 
         unsafe {
             let state = ffi::poly1305::Hacl_Poly1305_64_mk_state(state.r.as_mut_ptr(), state.h.as_mut_ptr());
             ffi::poly1305::Hacl_Poly1305_64_init(state, key.as_ptr() as _);
         }
 
+        let mut key2 = [0; 16];
+        key2.copy_from_slice(&key[16..]);
+
         Poly1305 {
             state,
-            key: keyblock,
+            key: key2,
             block: [0; 16],
             pos: 0
         }
