@@ -4,15 +4,13 @@ use hacl_star_sys as ffi;
 
 pub const SECRET_LENGTH: usize = 32;
 pub const PUBLIC_LENGTH: usize = 32;
-pub const SIGN_LENGTH  : usize = 64;
+pub const SIG_LENGTH  : usize = 64;
 
-#[derive(Default, Clone)]
-pub struct SecretKey(pub [u8; SECRET_LENGTH]);
-#[derive(Default, Clone)]
-pub struct PublicKey(pub [u8; PUBLIC_LENGTH]);
-#[derive(Clone)]
-pub struct Signature(pub [u8; SIGN_LENGTH]);
-
+define!{
+    pub struct SecretKey/secretkey(pub [u8; SECRET_LENGTH]);
+    pub struct PublicKey/publickey(pub [u8; PUBLIC_LENGTH]);
+    pub struct Signature/signature(pub [u8; SIG_LENGTH]);
+}
 
 pub fn keypair<R: RngCore + CryptoRng>(
     mut rng: R,
@@ -46,7 +44,7 @@ impl SecretKey {
 
     pub fn signature(&self, msg: &[u8]) -> Signature {
         let SecretKey(sk) = self;
-        let mut sig = [0; SIGN_LENGTH];
+        let mut sig = [0; SIG_LENGTH];
 
         unsafe {
             ffi::ed25519::Hacl_Ed25519_sign(

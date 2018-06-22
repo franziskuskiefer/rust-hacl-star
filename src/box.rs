@@ -9,19 +9,21 @@ pub mod secret {
     pub const NONCE_LENGTH: usize = 24;
     pub const MAC_LENGTH: usize = 16;
 
-    pub type SecretBox<'a, 'b> = And<Key<'a>, Nonce<'b>>;
+    pub type SecretBox<'a> = And<&'a Key, &'a Nonce>;
 
-    pub struct Key<'a>(pub &'a [u8; KEY_LENGTH]);
-    pub struct Nonce<'a>(pub &'a [u8; NONCE_LENGTH]);
+    define!{
+        pub struct Key/key(pub [u8; KEY_LENGTH]);
+        pub struct Nonce/nonce(pub [u8; NONCE_LENGTH]);
+    }
 
-    impl<'a, 'b> Key<'a> {
+    impl Key {
         #[inline]
-        pub fn nonce(&self, nonce: &'b [u8; NONCE_LENGTH]) -> SecretBox<'a, 'b> {
-            And(Key(self.0), Nonce(nonce))
+        pub fn nonce<'a>(&'a self, n: &'a [u8; NONCE_LENGTH]) -> SecretBox<'a> {
+            And(self, nonce(n))
         }
     }
 
-    impl<'a, 'b> SecretBox<'a, 'b> {
+    impl<'a> SecretBox<'a> {
         pub fn seal(self, m: &[u8], c: &mut [u8], mac: &mut [u8; MAC_LENGTH]) {
             assert!(c.len() > 32);
             assert_eq!(c.len(), m.len());
@@ -69,27 +71,28 @@ pub mod sealed {
         keypair
     };
     pub use super::secret::{
+        self,
         NONCE_LENGTH, MAC_LENGTH,
         Nonce
     };
 
-    pub type SealedBox<'a, 'b, 'c> = And<And<&'a SecretKey, &'b PublicKey>, Nonce<'c>>;
+    pub type SealedBox<'a> = And<And<&'a SecretKey, &'a PublicKey>, &'a Nonce>;
 
     impl SecretKey {
         #[inline]
-        pub fn and<'a, 'b>(&'a self, pk: &'b PublicKey) -> And<&'a SecretKey, &'b PublicKey> {
+        pub fn and<'a>(&'a self, pk: &'a PublicKey) -> And<&'a SecretKey, &'a PublicKey> {
             And(self, pk)
         }
     }
 
-    impl<'a, 'b> And<&'a SecretKey, &'b PublicKey> {
+    impl<'a> And<&'a SecretKey, &'a PublicKey> {
         #[inline]
-        pub fn nonce<'c>(&self, nonce: &'c [u8; NONCE_LENGTH]) -> SealedBox<'a, 'b, 'c> {
-            And(And(self.0, self.1), Nonce(nonce))
+        pub fn nonce(&self, n: &'a [u8; NONCE_LENGTH]) -> SealedBox<'a> {
+            And(And(self.0, self.1), secret::nonce(n))
         }
     }
 
-    impl<'a, 'b, 'c> SealedBox<'a, 'b, 'c> {
+    impl<'a> SealedBox<'a> {
         pub fn seal(self, m: &[u8], c: &mut [u8], mac: &mut [u8; MAC_LENGTH]) {
             assert!(c.len() > 32);
             assert_eq!(m.len(), c.len());

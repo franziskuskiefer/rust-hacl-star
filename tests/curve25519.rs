@@ -27,8 +27,8 @@ fn test_curve25519_kx() {
     use rand::OsRng;
     use curve25519::*;
 
-    let (mut sk1, mut pk1) = (SecretKey::default(), PublicKey::default());
-    let (mut sk2, mut pk2) = (SecretKey::default(), PublicKey::default());
+    let (mut sk1, mut pk1) = (SecretKey([0; 32]), PublicKey([0; 32]));
+    let (mut sk2, mut pk2) = (SecretKey([0; 32]), PublicKey([0; 32]));
     let (mut out1, mut out2) = ([0; 32], [0; 32]);
 
     keypair(OsRng::new().unwrap(), &mut sk1, &mut pk1);

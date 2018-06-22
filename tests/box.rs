@@ -71,10 +71,10 @@ fn test_secretbox() {
     let mut pt = [0; 72 + 32];
     let mut tag = [0; secret::MAC_LENGTH];
 
-    secret::Key(&KEY).nonce(&NONCE)
+    secret::key(&KEY).nonce(&NONCE)
         .seal(&MSG, &mut ct, &mut tag);
 
-    let r = secret::Key(&KEY).nonce(&NONCE)
+    let r = secret::key(&KEY).nonce(&NONCE)
         .open(&mut pt, &ct, &tag);
     assert!(r);
     assert_eq!(&pt[..], &MSG[..]);

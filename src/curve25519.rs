@@ -7,12 +7,12 @@ const BASEPOINT: [u8; 32] = [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 pub const PUBLIC_LENGTH: usize = 32;
 pub const SECRET_LENGTH: usize = 32;
 
-#[derive(Default, Clone)]
-pub struct SecretKey(pub [u8; SECRET_LENGTH]);
+define!{
+    pub struct SecretKey/secretkey(pub [u8; SECRET_LENGTH]);
+    pub struct PublicKey/publickey(pub [u8; SECRET_LENGTH]);
+}
 
-#[derive(Default, Clone)]
-pub struct PublicKey(pub [u8; PUBLIC_LENGTH]);
-
+#[repr(transparent)]
 #[derive(Default, Clone)]
 pub struct BasePoint(pub [u8; 32]);
 

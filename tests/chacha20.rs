@@ -11,6 +11,6 @@ const NONCE    : [u8;  12] = [0, 0, 0, 0, 0, 0, 0, 0x4a, 0, 0, 0, 0];
 #[test]
 fn test_chacha() {
     let mut output = [0; 114];
-    chacha20::Key(&KEY).nonce(&NONCE).process_ic(1, &PLAINTEXT, &mut output);
+    chacha20::key(&KEY).nonce(&NONCE).process_ic(1, &PLAINTEXT, &mut output);
     assert_eq!(&EXPECTED[..], &output[..]);
 }
