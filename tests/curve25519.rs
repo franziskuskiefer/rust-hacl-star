@@ -27,15 +27,15 @@ fn test_curve25519_kx() {
     use rand::OsRng;
     use curve25519::*;
 
-    let (mut sk1, mut pk1) = (SecretKey([0; 32]), PublicKey([0; 32]));
-    let (mut sk2, mut pk2) = (SecretKey([0; 32]), PublicKey([0; 32]));
+    let (mut sk1, mut pk1) = (None, None);
+    let (mut sk2, mut pk2) = (None, None);
     let (mut out1, mut out2) = ([0; 32], [0; 32]);
 
     keypair(OsRng::new().unwrap(), &mut sk1, &mut pk1);
     keypair(OsRng::new().unwrap(), &mut sk2, &mut pk2);
 
-    sk1.exchange(&pk2, &mut out1);
-    sk2.exchange(&pk1, &mut out2);
+    sk1.unwrap().exchange(&pk2.unwrap(), &mut out1);
+    sk2.unwrap().exchange(&pk1.unwrap(), &mut out2);
 
     assert_eq!(out1, out2);
 }

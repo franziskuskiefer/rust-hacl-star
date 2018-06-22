@@ -12,17 +12,23 @@ define!{
     pub struct Signature/signature(pub [u8; SIG_LENGTH]);
 }
 
-pub fn keypair<R: RngCore + CryptoRng>(
-    mut rng: R,
-    &mut SecretKey(ref mut sk): &mut SecretKey,
-    &mut PublicKey(ref mut pk): &mut PublicKey
-) {
-    rng.fill_bytes(sk);
-    unsafe {
-        ffi::ed25519::Hacl_Ed25519_secret_to_public(
-            pk.as_mut_ptr(),
-            sk.as_ptr() as _
-        );
+pub fn keypair<R: RngCore + CryptoRng>(mut rng: R, sk: &mut Option<SecretKey>, pk: &mut Option<PublicKey>) {
+    *sk = Some(SecretKey([0; SECRET_LENGTH]));
+    *pk = Some(PublicKey([0; PUBLIC_LENGTH]));
+
+    if_chain!{
+        if let Some(SecretKey(sk)) = sk;
+        if let Some(PublicKey(pk)) = pk;
+        then {
+            rng.fill_bytes(sk);
+
+            unsafe {
+                ffi::ed25519::Hacl_Ed25519_secret_to_public(
+                    pk.as_mut_ptr(),
+                    sk.as_ptr() as _
+                );
+            }
+        }
     }
 }
 

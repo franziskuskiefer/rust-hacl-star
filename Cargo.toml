@@ -25,6 +25,7 @@ appveyor = { repository = "quininer/rust-hacl-star" }
 rand_core = { version = "0.2", default-features = false }
 libc = { version = "0.2", default-features = false }
 hacl-star-sys = { version = "=0.0.6", path = "hacl-star-sys" }
+if_chain = "0.1"
 
 [dev-dependencies]
 rand = "0.5"
