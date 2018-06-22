@@ -12,11 +12,7 @@ define!{
     pub struct PublicKey/publickey(pub [u8; SECRET_LENGTH]);
 }
 
-#[repr(transparent)]
-#[derive(Default, Clone)]
-pub struct BasePoint(pub [u8; 32]);
-
-
+#[inline]
 pub fn keypair<R: RngCore + CryptoRng>(mut rng: R, sk: &mut Option<SecretKey>, pk: &mut Option<PublicKey>) {
     *sk = Some(SecretKey([0; SECRET_LENGTH]));
     *pk = Some(PublicKey([0; PUBLIC_LENGTH]));

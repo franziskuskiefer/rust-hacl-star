@@ -71,7 +71,6 @@ pub mod sealed {
         keypair
     };
     pub use super::secret::{
-        self,
         NONCE_LENGTH, MAC_LENGTH,
         Nonce
     };

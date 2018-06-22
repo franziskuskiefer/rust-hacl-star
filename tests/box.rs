@@ -85,7 +85,7 @@ fn test_sealedbox() {
     use hacl_star::curve25519;
     use box_::sealed;
 
-    const BASEPOINT: [u8; 32] = [9; 32];
+    const BASEPOINT: [u8; 32] = [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     let mut pk1 = [0; 32];
     let mut pk2 = [0; 32];

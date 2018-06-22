@@ -12,6 +12,7 @@ define!{
     pub struct Signature/signature(pub [u8; SIG_LENGTH]);
 }
 
+#[inline]
 pub fn keypair<R: RngCore + CryptoRng>(mut rng: R, sk: &mut Option<SecretKey>, pk: &mut Option<PublicKey>) {
     *sk = Some(SecretKey([0; SECRET_LENGTH]));
     *pk = Some(PublicKey([0; PUBLIC_LENGTH]));
