@@ -2,7 +2,6 @@
 
 #![no_std]
 
-#[macro_use] extern crate if_chain;
 extern crate rand_core;
 extern crate hacl_star_sys;
 

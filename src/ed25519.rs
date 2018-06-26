@@ -14,22 +14,16 @@ define!{
 
 #[inline]
 pub fn keypair<R: RngCore + CryptoRng>(mut rng: R, sk: &mut Option<SecretKey>, pk: &mut Option<PublicKey>) {
-    *sk = Some(SecretKey([0; SECRET_LENGTH]));
-    *pk = Some(PublicKey([0; PUBLIC_LENGTH]));
+    let SecretKey(sk) = sk.get_or_insert(SecretKey([0; SECRET_LENGTH]));
+    let PublicKey(pk) = pk.get_or_insert(PublicKey([0; PUBLIC_LENGTH]));
 
-    if_chain!{
-        if let Some(SecretKey(sk)) = sk;
-        if let Some(PublicKey(pk)) = pk;
-        then {
-            rng.fill_bytes(sk);
+    rng.fill_bytes(sk);
 
-            unsafe {
-                ffi::ed25519::Hacl_Ed25519_secret_to_public(
-                    pk.as_mut_ptr(),
-                    sk.as_ptr() as _
-                );
-            }
-        }
+    unsafe {
+        ffi::ed25519::Hacl_Ed25519_secret_to_public(
+            pk.as_mut_ptr(),
+            sk.as_ptr() as _
+        );
     }
 }
 
