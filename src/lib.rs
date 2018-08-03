@@ -1,5 +1,3 @@
-#![feature(repr_transparent)]
-
 #![no_std]
 
 extern crate rand_core;
