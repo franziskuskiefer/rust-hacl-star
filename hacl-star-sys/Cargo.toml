@@ -1,6 +1,6 @@
 [package]
 name = "hacl-star-sys"
-version = "0.0.6"
+version = "0.0.7"
 authors = ["quininer <quininer@live.com>"]
 description = "HACL* FFI"
 keywords = [ "hacl-star", "cryptographic" ]
@@ -17,4 +17,4 @@ libc = { version = "0.2", default-features = false }
 
 [build-dependencies]
 cc = "1.0"
-bindgen = { version = "0.37", optional = true }
+bindgen = { version = "0.40", optional = true }
