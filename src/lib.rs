@@ -31,3 +31,4 @@ pub mod chacha20poly1305;
 pub mod ed25519;
 pub mod curve25519;
 #[path = "box.rs"] pub mod box_;
+pub mod randombytes;

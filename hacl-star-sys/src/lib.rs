@@ -28,3 +28,4 @@ pub mod ed25519;
 pub mod curve25519;
 pub mod hacl_policies;
 pub mod nacl;
+pub mod randombytes;

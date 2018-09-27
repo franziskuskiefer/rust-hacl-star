@@ -33,6 +33,7 @@ fn main() {
         .flag_if_supported("-funroll-loops")
 
         .files(&[
+            "hacl-c/hacl_test_utils.c",
             "hacl-c/Hacl_Salsa20.c",
             "hacl-c/Hacl_Poly1305_32.c",
             "hacl-c/Hacl_Poly1305_64.c",
@@ -47,7 +48,8 @@ fn main() {
             "hacl-c/Hacl_Curve25519.c",
             "hacl-c/kremlib.c",
             "hacl-c/Hacl_Policies.c",
-            "hacl-c/NaCl.c"
+            "hacl-c/NaCl.c",
+            "hacl-c/randombytes.c"
         ])
 
         // ignore some warnings
@@ -94,6 +96,7 @@ fn main() {
         "hacl-c/Hacl_Curve25519.h"       => "curve25519.rs",         "Hacl_Curve25519_.+";
         "hacl-c/Hacl_Chacha20Poly1305.h" => "chacha20poly1305.rs",   "Hacl_Chacha20Poly1305_.+";
         "hacl-c/Hacl_Policies.h"         => "hacl_policies.rs",      "Hacl_Policies_.+";
-        "hacl-c/NaCl.h"                  => "nacl.rs",               "NaCl_.+"
+        "hacl-c/NaCl.h"                  => "nacl.rs",               "NaCl_.+";
+        "hacl-c/randombytes.c"           => "randombytes.rs",        "randombytes"
     };
 }
