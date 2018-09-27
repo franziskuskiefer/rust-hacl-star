@@ -13,17 +13,11 @@ license = "MIT"
 
 [features]
 bindgen = [ "hacl-star-sys/bindgen" ]
-std = [ "hacl-star-sys/use_std", "rand_core/std" ]
-alloc = [ "rand_core/alloc" ]
-serde1 = [ "rand_core/serde1" ]
+std = [ "hacl-star-sys/use_std" ]
 
 [badges]
 travis-ci = { repository = "quininer/rust-hacl-star" }
 appveyor = { repository = "quininer/rust-hacl-star" }
 
 [dependencies]
-rand_core = { version = "0.2", default-features = false }
 hacl-star-sys = { version = "=0.0.6", path = "hacl-star-sys" }
-
-[dev-dependencies]
-rand = "0.5"
