@@ -1,24 +1,23 @@
 extern crate cc;
 #[cfg(feature = "bindgen")] extern crate bindgen;
 
-#[cfg(feature = "bindgen")] use std::env;
+use std::env;
 #[cfg(feature = "bindgen")] use std::path::PathBuf;
 
 
 fn main() {
     let mut cc = cc::Build::new();
 
-    #[cfg(any(target_pointer_width = "32", target_env = "msvc"))]
-    cc
-        .shared_flag(true)
-        .define("KRML_NOUINT128", None)
-        .flag_if_supported("-Wno-unused-function")
-        .file("hacl-c/FStar.c");
-
-    #[cfg(all(target_arch = "wasm32", not(target_os = "emscripten")))]
-    cc
-        .compiler("clang")
-        .target("wasm32-unknown-unknown-wasm");
+    // from https://github.com/project-everest/hacl-star/blob/master/snapshots/makefiles/CMakeLists.txt#L62
+    if env::var("CARGO_CFG_TARGET_POINTER_WIDTH") == Ok("32".into())
+        || env::var("CARGO_CFG_TARGET_ENV") == Ok("msvc".into())
+    {
+        cc
+            .shared_flag(true)
+            .define("KRML_NOUINT128", None)
+            .flag_if_supported("-Wno-unused-function")
+            .file("hacl-c/FStar.c");
+    }
 
     cc
         .flag_if_supported(
