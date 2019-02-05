@@ -13,11 +13,11 @@ define!{
 }
 
 #[inline]
-pub fn keypair<R: RngCore + CryptoRng>(mut rng: R, sk: &mut Option<SecretKey>, pk: &mut Option<PublicKey>) {
-    let SecretKey(sk) = sk.get_or_insert(SecretKey([0; SECRET_LENGTH]));
-    let PublicKey(pk) = pk.get_or_insert(PublicKey([0; PUBLIC_LENGTH]));
+pub fn keypair<R: RngCore + CryptoRng>(mut rng: R) -> (SecretKey, PublicKey) {
+    let mut sk = [0; SECRET_LENGTH];
+    let mut pk = [0; PUBLIC_LENGTH];
 
-    rng.fill_bytes(sk);
+    rng.fill_bytes(&mut sk);
 
     unsafe {
         ffi::ed25519::Hacl_Ed25519_secret_to_public(
@@ -25,6 +25,8 @@ pub fn keypair<R: RngCore + CryptoRng>(mut rng: R, sk: &mut Option<SecretKey>, p
             sk.as_ptr() as _
         );
     }
+
+    (SecretKey(sk), PublicKey(pk))
 }
 
 impl SecretKey {

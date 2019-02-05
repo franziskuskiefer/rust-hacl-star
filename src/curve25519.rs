@@ -13,12 +13,14 @@ define!{
 }
 
 #[inline]
-pub fn keypair<R: RngCore + CryptoRng>(mut rng: R, sk: &mut Option<SecretKey>, pk: &mut Option<PublicKey>) {
-    let SecretKey(sk) = sk.get_or_insert(SecretKey([0; SECRET_LENGTH]));
-    let PublicKey(pk) = pk.get_or_insert(PublicKey([0; PUBLIC_LENGTH]));
+pub fn keypair<R: RngCore + CryptoRng>(mut rng: R) -> (SecretKey, PublicKey) {
+    let mut sk = [0; SECRET_LENGTH];
+    let mut pk = [0; SECRET_LENGTH];
 
-    rng.fill_bytes(sk);
-    scalarmult(pk, sk, &BASEPOINT);
+    rng.fill_bytes(&mut sk);
+    scalarmult(&mut pk, &sk, &BASEPOINT);
+
+    (SecretKey(sk), PublicKey(pk))
 }
 
 impl SecretKey {
