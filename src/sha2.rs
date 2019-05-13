@@ -1,6 +1,5 @@
 use hacl_star_sys as ffi;
 
-
 macro_rules! sha2 {
     (
         pub struct $name:ident {
@@ -21,7 +20,7 @@ macro_rules! sha2 {
         pub struct $name {
             state: [$s; $size],
             block: [u8; $block],
-            pos: usize
+            pos: usize,
         }
 
         impl $name {
@@ -37,7 +36,11 @@ macro_rules! sha2 {
             fn default() -> Self {
                 let mut state = [0; $size];
                 unsafe { $init(state.as_mut_ptr()) };
-                $name { state, block: [0; $block], pos: 0 }
+                $name {
+                    state,
+                    block: [0; $block],
+                    pos: 0,
+                }
             }
         }
 
@@ -69,15 +72,19 @@ macro_rules! sha2 {
 
             pub fn finish(mut self, buf: &mut [u8; $outlen]) {
                 unsafe {
-                    $update_last(self.state.as_mut_ptr(), self.block.as_ptr() as _, self.pos as _);
+                    $update_last(
+                        self.state.as_mut_ptr(),
+                        self.block.as_ptr() as _,
+                        self.pos as _,
+                    );
                     $finish(self.state.as_ptr() as _, buf.as_mut_ptr());
                 }
             }
         }
-    }
+    };
 }
 
-sha2!{
+sha2! {
     pub struct Sha256 {
         state: [u32; 137],
         block: [u8; 64]
@@ -93,7 +100,7 @@ sha2!{
     impl ffi::sha2_256::Hacl_SHA2_256_finish;
 }
 
-sha2!{
+sha2! {
     pub struct Sha384 {
         state: [u64; 169],
         block: [u8; 128]
@@ -109,7 +116,7 @@ sha2!{
     impl ffi::sha2_384::Hacl_SHA2_384_finish;
 }
 
-sha2!{
+sha2! {
     pub struct Sha512 {
         state: [u64; 169],
         block: [u8; 128]

@@ -1,13 +1,14 @@
-use rand_core::{ RngCore, CryptoRng };
 use hacl_star_sys as ffi;
+use rand_core::{CryptoRng, RngCore};
 
-
-const BASEPOINT: [u8; 32] = [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const BASEPOINT: [u8; 32] = [
+    9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+];
 
 pub const PUBLIC_LENGTH: usize = 32;
 pub const SECRET_LENGTH: usize = 32;
 
-define!{
+define! {
     pub struct SecretKey/secretkey(pub [u8; SECRET_LENGTH]);
     pub struct PublicKey/publickey(pub [u8; SECRET_LENGTH]);
 }
@@ -41,13 +42,12 @@ impl SecretKey {
     }
 }
 
-
 pub fn scalarmult(mypublic: &mut [u8; 32], secret: &[u8; 32], basepoint: &[u8; 32]) {
     unsafe {
         ffi::curve25519::Hacl_Curve25519_crypto_scalarmult(
             mypublic.as_mut_ptr(),
             secret.as_ptr() as _,
-            basepoint.as_ptr() as _
+            basepoint.as_ptr() as _,
         );
     }
 }

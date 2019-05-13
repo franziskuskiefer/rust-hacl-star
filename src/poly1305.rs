@@ -1,10 +1,9 @@
 use hacl_star_sys as ffi;
 
-
 #[derive(Default, Clone, Debug)]
 struct Inner {
     r: [u64; 3],
-    h: [u64; 3]
+    h: [u64; 3],
 }
 
 #[derive(Clone, Debug)]
@@ -12,7 +11,7 @@ pub struct Poly1305 {
     state: Inner,
     key: [u8; 16],
     block: [u8; 16],
-    pos: usize
+    pos: usize,
 }
 
 impl Poly1305 {
@@ -25,7 +24,7 @@ impl Poly1305 {
                 output.as_mut_ptr(),
                 input.as_ptr() as _,
                 input.len() as _,
-                key.as_ptr() as _
+                key.as_ptr() as _,
             );
         }
     }
@@ -36,7 +35,10 @@ impl Poly1305 {
         let mut state = Inner::default();
 
         unsafe {
-            let state = ffi::poly1305::Hacl_Poly1305_64_mk_state(state.r.as_mut_ptr(), state.h.as_mut_ptr());
+            let state = ffi::poly1305::Hacl_Poly1305_64_mk_state(
+                state.r.as_mut_ptr(),
+                state.h.as_mut_ptr(),
+            );
             ffi::poly1305::Hacl_Poly1305_64_init(state, key.as_ptr() as _);
         }
 
@@ -47,7 +49,7 @@ impl Poly1305 {
             state,
             key: key2,
             block: [0; 16],
-            pos: 0
+            pos: 0,
         }
     }
 
@@ -58,7 +60,7 @@ impl Poly1305 {
         unsafe {
             let state = ffi::poly1305::Hacl_Poly1305_64_mk_state(
                 self.state.r.as_mut_ptr(),
-                self.state.h.as_mut_ptr()
+                self.state.h.as_mut_ptr(),
             );
 
             if len >= br {
@@ -87,10 +89,14 @@ impl Poly1305 {
         unsafe {
             let state = ffi::poly1305::Hacl_Poly1305_64_mk_state(
                 self.state.r.as_mut_ptr(),
-                self.state.h.as_mut_ptr()
+                self.state.h.as_mut_ptr(),
             );
 
-            ffi::poly1305::Hacl_Poly1305_64_update_last(state, self.block.as_ptr() as _, self.pos as _);
+            ffi::poly1305::Hacl_Poly1305_64_update_last(
+                state,
+                self.block.as_ptr() as _,
+                self.pos as _,
+            );
             ffi::poly1305::Hacl_Poly1305_64_finish(state, buf.as_mut_ptr(), self.key.as_ptr() as _);
         }
     }

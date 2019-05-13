@@ -1,9 +1,10 @@
+#[cfg(feature = "bindgen")]
+extern crate bindgen;
 extern crate cc;
-#[cfg(feature = "bindgen")] extern crate bindgen;
 
 use std::env;
-#[cfg(feature = "bindgen")] use std::path::PathBuf;
-
+#[cfg(feature = "bindgen")]
+use std::path::PathBuf;
 
 fn main() {
     let mut cc = cc::Build::new();
@@ -12,52 +13,50 @@ fn main() {
     if env::var("CARGO_CFG_TARGET_POINTER_WIDTH") == Ok("32".into())
         || env::var("CARGO_CFG_TARGET_ENV") == Ok("msvc".into())
     {
-        cc
-            .shared_flag(true)
+        cc.shared_flag(true)
             .define("KRML_NOUINT128", None)
             .flag_if_supported("-Wno-unused-function")
             .file("hacl-c/FStar.c");
     }
 
-    cc
-        .flag_if_supported(
-            if cc::Build::new().get_compiler().is_like_gnu() || cc::Build::new().get_compiler().is_like_clang()
-            { "-std=gnu11" } else { "-std=c11" }
-        )
-        .include("hacl-c")
-
-        // from https://github.com/mitls/hacl-star/blob/master/snapshots/hacl-c/Makefile#L8
-        .flag_if_supported("-fwrapv")
-        .flag_if_supported("-fomit-frame-pointer")
-        .flag_if_supported("-funroll-loops")
-
-        .files(&[
-            "hacl-c/Hacl_Salsa20.c",
-            "hacl-c/Hacl_Poly1305_32.c",
-            "hacl-c/Hacl_Poly1305_64.c",
-            "hacl-c/Hacl_Chacha20.c",
-            "hacl-c/AEAD_Poly1305_64.c",
-            "hacl-c/Hacl_Chacha20Poly1305.c",
-            "hacl-c/Hacl_HMAC_SHA2_256.c",
-            "hacl-c/Hacl_SHA2_256.c",
-            "hacl-c/Hacl_SHA2_384.c",
-            "hacl-c/Hacl_SHA2_512.c",
-            "hacl-c/Hacl_Ed25519.c",
-            "hacl-c/Hacl_Curve25519.c",
-            "hacl-c/kremlib.c",
-            "hacl-c/Hacl_Policies.c",
-            "hacl-c/NaCl.c"
-        ])
-
-        // ignore some warnings
-        .flag_if_supported("-Wno-unused-parameter")
-        .flag_if_supported("-Wno-unused-variable")
-
-        .compile("hacl");
+    cc.flag_if_supported(
+        if cc::Build::new().get_compiler().is_like_gnu()
+            || cc::Build::new().get_compiler().is_like_clang()
+        {
+            "-std=gnu11"
+        } else {
+            "-std=c11"
+        },
+    )
+    .include("hacl-c")
+    // from https://github.com/mitls/hacl-star/blob/master/snapshots/hacl-c/Makefile#L8
+    .flag_if_supported("-fwrapv")
+    .flag_if_supported("-fomit-frame-pointer")
+    .flag_if_supported("-funroll-loops")
+    .files(&[
+        "hacl-c/Hacl_Salsa20.c",
+        "hacl-c/Hacl_Poly1305_32.c",
+        "hacl-c/Hacl_Poly1305_64.c",
+        "hacl-c/Hacl_Chacha20.c",
+        "hacl-c/AEAD_Poly1305_64.c",
+        "hacl-c/Hacl_Chacha20Poly1305.c",
+        "hacl-c/Hacl_HMAC_SHA2_256.c",
+        "hacl-c/Hacl_SHA2_256.c",
+        "hacl-c/Hacl_SHA2_384.c",
+        "hacl-c/Hacl_SHA2_512.c",
+        "hacl-c/Hacl_Ed25519.c",
+        "hacl-c/Hacl_Curve25519.c",
+        "hacl-c/kremlib.c",
+        "hacl-c/Hacl_Policies.c",
+        "hacl-c/NaCl.c",
+    ])
+    // ignore some warnings
+    .flag_if_supported("-Wno-unused-parameter")
+    .flag_if_supported("-Wno-unused-variable")
+    .compile("hacl");
 
     #[cfg(feature = "bindgen")]
-    let outdir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap())
-        .join("src");
+    let outdir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap()).join("src");
 
     #[cfg(feature = "bindgen")]
     macro_rules! bindgen {
@@ -80,7 +79,7 @@ fn main() {
     }
 
     #[cfg(feature = "bindgen")]
-    bindgen!{
+    bindgen! {
         "hacl-c/AEAD_Poly1305_64.h"      => "aead_poly1305.rs",      "AEAD_Poly1305_.+";
         "hacl-c/Hacl_Salsa20.h"          => "salsa20.rs",            "Hacl_Salsa20_.+";
         "hacl-c/Hacl_Chacha20.h"         => "chacha20.rs",           "Hacl_Chacha20_.+";

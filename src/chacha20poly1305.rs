@@ -1,14 +1,13 @@
 use hacl_star_sys as ffi;
-use ::And;
+use And;
 
-
-pub const KEY_LENGTH  : usize = 32;
+pub const KEY_LENGTH: usize = 32;
 pub const NONCE_LENGTH: usize = 12;
-pub const MAC_LENGTH  : usize = 16;
+pub const MAC_LENGTH: usize = 16;
 
 pub type ChaCha20Poly1305<'a> = And<&'a Key, &'a Nonce>;
 
-define!{
+define! {
     pub struct Key/key(pub [u8; KEY_LENGTH]);
     pub struct Nonce/nonce(pub [u8; NONCE_LENGTH]);
 }
@@ -31,7 +30,7 @@ impl<'a> ChaCha20Poly1305<'a> {
                 aad.as_ptr() as _,
                 aad.len() as _,
                 (self.0).0.as_ptr() as _,
-                (self.1).0.as_ptr() as _
+                (self.1).0.as_ptr() as _,
             );
         }
     }
@@ -46,7 +45,7 @@ impl<'a> ChaCha20Poly1305<'a> {
                 aad.as_ptr() as _,
                 aad.len() as _,
                 (self.0).0.as_ptr() as _,
-                (self.1).0.as_ptr() as _
+                (self.1).0.as_ptr() as _,
             ) == 0
         }
     }

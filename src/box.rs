@@ -1,6 +1,5 @@
 use hacl_star_sys as ffi;
-use ::And;
-
+use And;
 
 pub mod secret {
     use super::*;
@@ -11,7 +10,7 @@ pub mod secret {
 
     pub type SecretBox<'a> = And<&'a Key, &'a Nonce>;
 
-    define!{
+    define! {
         pub struct Key/key(pub [u8; KEY_LENGTH]);
         pub struct Nonce/nonce(pub [u8; NONCE_LENGTH]);
     }
@@ -37,7 +36,7 @@ pub mod secret {
                     m.as_ptr() as _,
                     (m.len() - 32) as _,
                     nonce.as_ptr() as _,
-                    key.as_ptr() as _
+                    key.as_ptr() as _,
                 );
             }
         }
@@ -55,25 +54,17 @@ pub mod secret {
                     mac.as_ptr() as _,
                     (c.len() - 32) as _,
                     nonce.as_ptr() as _,
-                    key.as_ptr() as _
+                    key.as_ptr() as _,
                 ) == 0
             }
         }
     }
 }
 
-
 pub mod sealed {
+    pub use super::secret::{Nonce, MAC_LENGTH, NONCE_LENGTH};
     use super::*;
-    pub use ::curve25519::{
-        PUBLIC_LENGTH, SECRET_LENGTH,
-        SecretKey, PublicKey,
-        keypair
-    };
-    pub use super::secret::{
-        NONCE_LENGTH, MAC_LENGTH,
-        Nonce
-    };
+    pub use curve25519::{keypair, PublicKey, SecretKey, PUBLIC_LENGTH, SECRET_LENGTH};
 
     pub type SealedBox<'a> = And<And<&'a SecretKey, &'a PublicKey>, &'a Nonce>;
 
@@ -106,7 +97,7 @@ pub mod sealed {
                     (m.len() - 32) as _,
                     nonce.as_ptr() as _,
                     pk.as_ptr() as _,
-                    sk.as_ptr() as _
+                    sk.as_ptr() as _,
                 );
             }
         }
@@ -125,7 +116,7 @@ pub mod sealed {
                     (c.len() - 32) as _,
                     nonce.as_ptr() as _,
                     pk.as_ptr() as _,
-                    sk.as_ptr() as _
+                    sk.as_ptr() as _,
                 ) == 0
             }
         }
