@@ -10,6 +10,7 @@ documentation = "https://docs.rs/hacl-star/"
 license = "MIT"
 
 [workspace]
+exclude = ["examples/hacl-box-wasm"]
 
 [features]
 bindgen = [ "hacl-star-sys/bindgen" ]
