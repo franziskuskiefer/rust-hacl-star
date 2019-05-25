@@ -1,5 +1,5 @@
 use hacl_star_sys as ffi;
-use ::And;
+use crate::And;
 
 
 pub const KEY_LENGTH: usize = 32;
@@ -14,6 +14,7 @@ define!{
 }
 
 impl Key {
+    #[allow(clippy::trivially_copy_pass_by_ref)]
     #[inline]
     pub fn nonce<'a>(&'a self, n: &'a [u8; NONCE_LENGTH]) -> Salsa20<'a> {
         And(self, nonce(n))

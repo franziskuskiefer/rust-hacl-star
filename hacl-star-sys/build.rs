@@ -55,16 +55,20 @@ fn main() {
 
         .compile("hacl");
 
-    #[cfg(feature = "bindgen")]
+    #[cfg(all(feature = "bindgen", feature = "overwrite"))]
     let outdir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap())
-        .join("src");
+        .join("src")
+        .join("imp");
+
+    #[cfg(all(feature = "bindgen", not(feature = "overwrite")))]
+    let outdir = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     #[cfg(feature = "bindgen")]
     macro_rules! bindgen {
         ( @bind $input:expr => $output:expr , $white:expr ) => {
             bindgen::Builder::default()
                 .header($input)
-                .ctypes_prefix("::libc")
+                .ctypes_prefix("crate::libc")
                 .use_core()
                 .whitelist_type($white)
                 .whitelist_function($white)

@@ -1,6 +1,6 @@
 extern crate hacl_star;
 
-use hacl_star::box_;
+use hacl_star::nacl;
 
 
 const MSG: [u8; 104] = [
@@ -65,7 +65,7 @@ const SK2: [u8; 32] = [
 
 #[test]
 fn test_secretbox() {
-    use box_::secret;
+    use nacl::secret;
 
     let mut ct = [0; 72 + 32];
     let mut pt = [0; 72 + 32];
@@ -83,7 +83,7 @@ fn test_secretbox() {
 #[test]
 fn test_sealedbox() {
     use hacl_star::curve25519;
-    use box_::sealed;
+    use nacl::sealed;
 
     const BASEPOINT: [u8; 32] = [9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 

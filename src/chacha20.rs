@@ -1,5 +1,5 @@
 use hacl_star_sys as ffi;
-use ::And;
+use crate::And;
 
 
 pub const KEY_LENGTH: usize = 32;

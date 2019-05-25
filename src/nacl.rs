@@ -1,5 +1,5 @@
 use hacl_star_sys as ffi;
-use ::And;
+use crate::And;
 
 
 pub mod secret {
@@ -65,7 +65,7 @@ pub mod secret {
 
 pub mod sealed {
     use super::*;
-    pub use ::curve25519::{
+    pub use crate::curve25519::{
         PUBLIC_LENGTH, SECRET_LENGTH,
         SecretKey, PublicKey,
         keypair
@@ -75,6 +75,7 @@ pub mod sealed {
         Nonce
     };
 
+    pub type PreSealedBox<'a> = And<&'a SecretKey, &'a PublicKey>;
     pub type SealedBox<'a> = And<And<&'a SecretKey, &'a PublicKey>, &'a Nonce>;
 
     impl SecretKey {
@@ -84,7 +85,7 @@ pub mod sealed {
         }
     }
 
-    impl<'a> And<&'a SecretKey, &'a PublicKey> {
+    impl<'a> PreSealedBox<'a> {
         #[inline]
         pub fn nonce(&self, n: &'a [u8; NONCE_LENGTH]) -> SealedBox<'a> {
             And(And(self.0, self.1), secret::nonce(n))
