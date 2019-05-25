@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 use arrayref::{ array_ref, array_mut_ref };
-use hacl_star::{ curve25519, box_::sealed };
+use hacl_star::{ curve25519, nacl::sealed };
 
 
 #[wasm_bindgen]

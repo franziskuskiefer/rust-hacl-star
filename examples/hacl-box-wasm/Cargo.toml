@@ -11,5 +11,5 @@ crate-type = [ "cdylib" ]
 
 [dependencies]
 hacl-star = { path = "../.." }
-wasm-bindgen = "*"
-arrayref = "*"
+wasm-bindgen = "0.2"
+arrayref = "0.3"
