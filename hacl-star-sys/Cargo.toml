@@ -11,6 +11,7 @@ license = "MIT"
 edition = "2018"
 
 [features]
+default = [ "bindgen" ]
 use_std = [ "libc/use_std" ]
 overwrite = [ "bindgen" ]
 
