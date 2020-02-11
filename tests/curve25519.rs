@@ -29,8 +29,8 @@ fn test_curve25519_kx() {
 
     let (mut out1, mut out2) = ([0; 32], [0; 32]);
 
-    let (sk1, pk1) = keypair(OsRng::new().unwrap());
-    let (sk2, pk2) = keypair(OsRng::new().unwrap());
+    let (sk1, pk1) = keypair(OsRng);
+    let (sk2, pk2) = keypair(OsRng);
 
     sk1.exchange(&pk2, &mut out1);
     sk2.exchange(&pk1, &mut out2);
