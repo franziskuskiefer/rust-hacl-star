@@ -1,6 +1,6 @@
 [package]
 name = "hacl-star"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["quininer <quininer@live.com>"]
 description = "HACL*, a formally verified cryptographic library for Rust (binding to hacl-c)."
 keywords = [ "hacl-star", "cryptography" ]
@@ -21,8 +21,8 @@ travis-ci = { repository = "quininer/rust-hacl-star" }
 appveyor = { repository = "quininer/rust-hacl-star" }
 
 [dependencies]
-rand_core = { version = "0.4", default-features = false }
+rand_core = { version = "0.5", default-features = false }
 hacl-star-sys = { version = "0.1", path = "hacl-star-sys" }
 
 [dev-dependencies]
-rand = "0.6"
+rand = "0.7"
