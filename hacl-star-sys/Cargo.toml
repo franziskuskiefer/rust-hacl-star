@@ -1,6 +1,6 @@
 [package]
 name = "hacl-star-sys"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["quininer <quininer@live.com>"]
 description = "HACL* FFI"
 keywords = [ "hacl-star", "cryptographic" ]
@@ -11,7 +11,7 @@ license = "MIT"
 edition = "2018"
 
 [features]
-default = [ "bindgen" ]
+default = []
 use_std = [ "libc/use_std" ]
 overwrite = [ "bindgen" ]
 
@@ -19,5 +19,5 @@ overwrite = [ "bindgen" ]
 libc = { version = "0.2", default-features = false }
 
 [build-dependencies]
-cc = "1.0"
-bindgen = { version = "0.40", optional = true }
+cc = "1"
+bindgen = { version = "0.53", optional = true }

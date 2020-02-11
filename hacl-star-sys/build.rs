@@ -1,5 +1,4 @@
 use std::{ fs, env };
-use std::path::Path;
 use std::borrow::Cow;
 
 
@@ -72,9 +71,17 @@ fn make_evercrypt(
     builder.compile(user_target.trim_start_matches("lib").trim_end_matches(".a"));
 }
 
-fn make_binding(code_target: &str) {
-    let outdir = env::var("OUT_DIR").unwrap();
-    let outdir = Path::new(&outdir);
+#[cfg(feature = "bindgen")]
+fn make_binding(code_target: &str, all_h_files: &str) {
+    use std::path::Path;
+
+    #[cfg(feature = "overwrite")]
+    let outdir = Path::new(env::var("CARGO_MANIFEST_DIR").as_ref().unwrap())
+        .join("src");
+
+    #[cfg(not(feature = "overwrite"))]
+    let outdir = Path::new(env::var("OUT_DIR").as_ref().unwrap())
+        .to_owned();
 
     let mut builder = bindgen::Builder::default();
 
@@ -82,12 +89,16 @@ fn make_binding(code_target: &str) {
         builder = builder.clang_arg("-fvisibility=default");
     }
 
-    builder
+    builder = builder
         .clang_arg("-I./hacl-star/dist/kremlin/include")
         .clang_arg("-I./hacl-star/dist/kremlin/kremlib/dist/minimal")
-        .clang_arg(format!("-I./hacl-star/dist/{}", code_target))
-        .header(format!("./hacl-star/dist/{}/EverCrypt.h", code_target))
-        .header(format!("./hacl-star/dist/{}/Hacl_NaCl.h", code_target))
+        .clang_arg(format!("-I./hacl-star/dist/{}", code_target));
+
+    for file in all_h_files.split(' ') {
+        builder = builder.header(format!("./hacl-star/dist/{}/{}", code_target, file.trim()));
+    }
+
+    builder
         .ctypes_prefix("crate::libc")
         .whitelist_function("EverCrypt.*|Hacl.*")
         .whitelist_type("EverCrypt.*|Hacl.*")
@@ -103,9 +114,13 @@ fn main() {
 
     let include =
         fs::read_to_string(format!("./hacl-star/dist/{}/Makefile.include", code_target)).unwrap();
-    let (user_target, user_cflags, user_c_files, all_c_files, _) =
+
+    #[allow(unused_variables)]
+    let (user_target, user_cflags, user_c_files, all_c_files, all_h_files) =
         parse_include(&include).expect("makefile.include parse failed");
 
     make_evercrypt(&code_target, user_target, user_cflags, user_c_files, all_c_files);
-    make_binding(&code_target);
+
+    #[cfg(feature = "bindgen")]
+    make_binding(&code_target, all_h_files);
 }
