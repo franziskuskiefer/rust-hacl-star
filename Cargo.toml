@@ -21,8 +21,9 @@ travis-ci = { repository = "quininer/rust-hacl-star" }
 appveyor = { repository = "quininer/rust-hacl-star" }
 
 [dependencies]
+bitflags = "1"
 rand_core = { version = "0.5", default-features = false }
-hacl-star-sys = { version = "0.1", path = "hacl-star-sys" }
+hacl-star-sys = { version = "0.2", path = "hacl-star-sys" }
 
 [dev-dependencies]
 rand = "0.7"

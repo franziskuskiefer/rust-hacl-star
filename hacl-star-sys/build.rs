@@ -100,8 +100,9 @@ fn make_binding(code_target: &str, all_h_files: &str) {
 
     builder
         .ctypes_prefix("crate::libc")
-        .whitelist_function("EverCrypt.*|Hacl.*")
-        .whitelist_type("EverCrypt.*|Hacl.*")
+        .whitelist_function("EverCrypt.*|Spec.*")
+        .whitelist_type("EverCrypt.*|Spec.*")
+        .whitelist_var("EverCrypt.*|Spec.*")
         .use_core()
         .generate().unwrap()
         .write_to_file(outdir.join("sys.rs")).unwrap();
